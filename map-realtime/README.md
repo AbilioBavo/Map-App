@@ -15,7 +15,7 @@ Premium realtime map app built with React + Vite frontend and Node + Socket.IO b
 
 ## Stack
 
-- Frontend: React 19.2 + Vite 7 + Tailwind CSS 4 + MapLibre GL JS v5 (or Google Maps, optional).
+- Frontend: React 19.2 + Vite 7 + Tailwind CSS 4 + MapLibre GL JS v5.
 - Backend: Node.js 24 + Express + Socket.IO 4.8 + TypeScript.
 
 <!-- Version source citations:
@@ -26,7 +26,6 @@ Socket.IO 4.8: https://socket.io/docs/v4/changelog/
 MapLibre GL JS v5: https://maplibre.org/maplibre-gl-js/docs/
 Node.js 24: https://nodejs.org/en/about/previous-releases
 Mapbox GL JS v3: https://docs.mapbox.com/mapbox-gl-js/guides/
-Google Maps JS API: https://developers.google.com/maps/documentation/javascript
 -->
 
 ## Monorepo layout
@@ -50,9 +49,8 @@ npm run dev
 
 - Frontend:
   - `VITE_SOCKET_URL` (default `http://localhost:4000`)
-  - `VITE_MAP_PROVIDER` (`maplibre` | `mapbox` | `google`)
+  - `VITE_MAP_PROVIDER` (`maplibre` | `mapbox`)
   - `VITE_MAPBOX_TOKEN` (optional)
-  - `VITE_GOOGLE_MAPS_API_KEY` (optional, required when provider=`google`)
 - Backend:
   - `PORT` (default `4000`)
   - `REDIS_URL` (optional)

@@ -9,12 +9,8 @@ const socketUrl =
 const mapProvider =
   (import.meta.env.MAP_PROVIDER ?? import.meta.env.VITE_MAP_PROVIDER ?? 'maplibre') as
     | 'maplibre'
-    | 'mapbox'
-    | 'google';
+    | 'mapbox';
 const mapboxToken = (import.meta.env.MAPBOX_TOKEN ?? import.meta.env.VITE_MAPBOX_TOKEN) as
-  | string
-  | undefined;
-const googleMapsApiKey = (import.meta.env.GOOGLE_MAPS_API_KEY ?? import.meta.env.VITE_GOOGLE_MAPS_API_KEY) as
   | string
   | undefined;
 
@@ -35,16 +31,23 @@ export default function App() {
 
   useEffect(() => {
     socketService.connect(socketUrl);
-    socketService.join(name);
 
-    const unsubscribe = socketService.onPositions((positions) => {
+    const unsubscribeConnect = socketService.onConnect((socketId) => {
+      setLocalUserId((prev) => prev ?? socketId);
+      socketService.join(name);
+    });
+
+    const unsubscribePositions = socketService.onPositions((positions) => {
       setUsers(positions);
-      const mine = positions.find((p) => p.name === name);
-      if (mine) setLocalUserId(mine.id);
+
+      // Fallback for edge cases where connect event was missed in very fast reconnect cycles.
+      const socketId = socketService.getSocketId();
+      if (socketId) setLocalUserId((prev) => prev ?? socketId);
     });
 
     return () => {
-      unsubscribe();
+      unsubscribeConnect();
+      unsubscribePositions();
       socketService.disconnect();
     };
   }, [name]);
@@ -67,7 +70,6 @@ export default function App() {
           localUserId={localUserId}
           mapProvider={mapProvider}
           mapboxToken={mapboxToken}
-          googleMapsApiKey={googleMapsApiKey}
         />
       </section>
 
