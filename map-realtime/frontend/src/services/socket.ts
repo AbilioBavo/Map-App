@@ -21,6 +21,23 @@ export class SocketService {
     });
   }
 
+  getSocketId(): string | null {
+    return this.socket?.id ?? null;
+  }
+
+  onConnect(callback: (socketId: string) => void): () => void {
+    if (!this.socket) return () => {};
+
+    const handler = () => {
+      if (this.socket?.id) callback(this.socket.id);
+    };
+
+    this.socket.on('connect', handler);
+    if (this.socket.connected && this.socket.id) callback(this.socket.id);
+
+    return () => this.socket?.off('connect', handler);
+  }
+
   onPositions(callback: (positions: UserPosition[]) => void): () => void {
     if (!this.socket) return () => {};
     this.socket.on('positions', callback);
