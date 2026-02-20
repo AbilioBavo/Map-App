@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: map-realtime-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: PORT
+        value: 4000
+      - key: REDIS_URL
+        sync: false
